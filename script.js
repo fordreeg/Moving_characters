@@ -1,56 +1,39 @@
 const btn = document.querySelector('.btn'),
-      inputVal = document.querySelector('#input'),
-      label = document.querySelector('label'),
+      input = document.querySelector('#input'),
       output = document.querySelector('.output');
 
-
 btn.addEventListener('click', () => {
-  displayText(inputVal.value);
-  inputVal.value = '';
 
-  document.querySelectorAll('.char').forEach(item => {
+  displayText(input.value);
+  input.value = '';
 
-    item.addEventListener('mousedown', (e) => {
-      move(e);
-    });
+  document.querySelectorAll('.letter').forEach(item => {
+    moveChar(item);  
 
   });
 
 });
 
+function moveChar(item) {
 
-function move (event) {
+  item.addEventListener('click', () => {
 
-  let item = event.target;
+    document.onmousemove = setPositionChar;
 
-  item.style.position = 'absolute';
+    item.addEventListener('dblclick', () => {
+    
+      document.onmousemove = null;
+    });
 
+    function setPositionChar(event) {
 
-  moveAt(event.pageX, event.pageY)
-
-
-  document.addEventListener('mousemove', onMouseMove);
-
-  item.addEventListener('mouseover', () => {
-    console.log('dd');
+      item.style.position = 'absolute';
+      item.style.left = event.pageX - item.offsetWidth - 3 + 'px';
+      item.style.top = event.pageY - item.offsetHeight + 3  + 'px';
+    }
   });
-  function moveAt(pageX, pageY) {
-
-    item.style.left = pageX - item.offsetWidth / 2 + 'px';
-    item.style.top = pageY - item.offsetHeight / 2 + 'px';
-  }
-
-  function onMouseMove(event) {
-    moveAt(event.pageX, event.pageY);
-  }
-
-  item.addEventListener('mouseup', (e) => {
-
-    document.removeEventListener('mousemove', onMouseMove);
-    item.addEventListener('mouseup', null);
-  });
+  
 };
-
 
 function displayText(str) {
 
@@ -61,11 +44,10 @@ function displayText(str) {
 
     for (let key of arrChars) {
       let span = document.createElement('span');
-      span.classList.add('char');
+      span.classList.add('letter');
 
       span.style.cssText = `
-                              display: inline-block;
-                              cursor: pointer; 
+                              cursor: move; 
                               font-size: 19px; 
                               margin-right: 2px;
                             `;
