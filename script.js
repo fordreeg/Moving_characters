@@ -24,26 +24,30 @@ function move (event) {
   let item = event.target;
 
   item.style.position = 'absolute';
-  item.style.zIndex = '1000';
 
-  document.addEventListener('mousemove', (e) => {
 
-    moveAt(item, e.pageX, e.pageY)
+  moveAt(event.pageX, event.pageY)
+
+
+  document.addEventListener('mousemove', onMouseMove);
+
+  item.addEventListener('mouseover', () => {
+    console.log('dd');
   });
+  function moveAt(pageX, pageY) {
 
-  function moveAt(target, pageX, pageY) {
+    item.style.left = pageX - item.offsetWidth / 2 + 'px';
+    item.style.top = pageY - item.offsetHeight / 2 + 'px';
+  }
 
-    target.style.left = pageX - target.offsetWidth / 2 + 'px';
-    target.style.top = pageY - target.offsetHeight / 2 + 'px';
+  function onMouseMove(event) {
+    moveAt(event.pageX, event.pageY);
   }
 
   item.addEventListener('mouseup', (e) => {
 
-    document.removeEventListener('mousemove', (e) => {
-      moveAt(item, e.pageX, e.pageY)
-      item.onmouseup = null;
-    });
-    
+    document.removeEventListener('mousemove', onMouseMove);
+    item.addEventListener('mouseup', null);
   });
 };
 
@@ -53,9 +57,9 @@ function displayText(str) {
   output.innerHTML = '';
 
   if (str) {
-    let arrChar = str.split('');
+    let arrChars = str.split('');
 
-    for (let key of arrChar) {
+    for (let key of arrChars) {
       let span = document.createElement('span');
       span.classList.add('char');
 
