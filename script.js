@@ -1,8 +1,23 @@
-const btn = document.querySelector('.btn'),
-      input = document.querySelector('#input'),
-      output = document.querySelector('.output');
+const container = document.createElement('div'),
+      wrap = document.createElement('div'),
+      input = document.createElement('input'),
+      button = document.createElement('button'),
+      output = document.createElement('div');
 
-btn.addEventListener('click', () => {
+container.classList.add('container');
+wrap.classList.add('wrap');
+input.classList.add('input');
+button.classList.add('btn');
+button.innerHTML = 'Click';
+output.classList.add('output');
+
+document.body.prepend(container);
+container.append(wrap);
+container.append(output);
+wrap.append(input);
+wrap.append(button);
+
+button.addEventListener('click', () => {
 
   displayText(input.value);
   input.value = '';

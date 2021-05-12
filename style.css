@@ -16,10 +16,10 @@
    position: absolute;
 }
 
-#input {
+.input {
    margin: 0 5px;
 }
-#input:focus {
+.input:focus {
    outline: none;
 }
 .btn {
