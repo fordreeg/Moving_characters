@@ -31,55 +31,25 @@ button.addEventListener('click', () => {
 function moveChar(item) {
 
   item.addEventListener('click', (e) => {
-    item.classList.add('active');
-    document.onmousemove = setPositionChar;
 
-    const activeChar = ul.querySelector(`.active`);
-    const currentChar = e.target;
-
-
-    document.addEventListener('contextmenu', (event) => {
-      
-      if (event.target !== item) {
-
-        event.preventDefault();
-
-        const currentElement = event.target;
-
-        const isMoveable = activeChar !== currentElement && 
-                          currentElement.classList.contains(`letter`);
-      
-        if (isMoveable) {
-          
-          let nextElement;
-  
-          if(currentElement === activeChar.nextElementSibling)  {
-            nextElement = currentElement.nextElementSibling;
-          } else {
-            nextElement = currentElement
-          }
-  
-          ul.insertBefore(activeChar, nextElement);
-          item.classList.remove('active');
-          document.onmousemove = null;
-  
-        } else {
-          item.classList.remove('active');
-          document.onmousemove = null;
-        }
-      }
-    });
+    if(e.target === item) {
+      document.onmousemove = setPositionChar;
+      document.onclick = setTimeout(() => {document.onclick = stop});
+    }
   });
 
-  function setPositionChar(event) {
+  function stop() {
+    document.onclick = null;
+    document.onmousemove = null;
+  }
 
-    item.style.transform = `translate(${(event.clientX - item.offsetLeft) + 7}px,${(event.clientY - item.offsetTop) - 10}px)`;
+  function setPositionChar(event) {
+    item.style.transform = `translate(${(event.clientX - item.offsetLeft) - 4}px,${(event.clientY - item.offsetTop) - 30}px)`;
   }
 
 };
 
 function displayText(str) {
-
   ul.innerHTML = '';
 
   if (str) {
@@ -89,11 +59,11 @@ function displayText(str) {
       let li = document.createElement('li');
       li.classList.add('letter');
 
-
-      li.style.cssText = `  display: inline-block;
+      li.style.cssText = `  
+                            display: inline-block;
                             cursor: move;
-                            font-size: 19px; 
-                            margin-left: 3px;
+                            font-size: 25px; 
+                            margin-left: 4px;
                             `;
       li.innerHTML = key;
       ul.append(li);
