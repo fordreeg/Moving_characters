@@ -2,18 +2,18 @@ const container = document.createElement('div'),
       wrap = document.createElement('div'),
       input = document.createElement('input'),
       button = document.createElement('button'),
-      output = document.createElement('div');
+      ul = document.createElement('ul');
 
 container.classList.add('container');
 wrap.classList.add('wrap');
 input.classList.add('input');
 button.classList.add('btn');
 button.innerHTML = 'Click';
-output.classList.add('output');
+ul.classList.add('list');
 
-document.body.prepend(container);
+document.body.append(container);
 container.append(wrap);
-container.append(output);
+container.append(ul);
 wrap.append(input);
 wrap.append(button);
 
@@ -24,50 +24,79 @@ button.addEventListener('click', () => {
 
   document.querySelectorAll('.letter').forEach(item => {
     moveChar(item);  
-
   });
 
 });
 
 function moveChar(item) {
 
-  item.addEventListener('click', () => {
-
+  item.addEventListener('click', (e) => {
+    item.classList.add('active');
     document.onmousemove = setPositionChar;
 
-    item.addEventListener('dblclick', () => {
-    
-      document.onmousemove = null;
-    });
+    const activeChar = ul.querySelector(`.active`);
+    const currentChar = e.target;
 
-    function setPositionChar(event) {
 
-      item.style.position = 'absolute';
-      item.style.left = event.pageX - item.offsetWidth - 3 + 'px';
-      item.style.top = event.pageY - item.offsetHeight + 3  + 'px';
-    }
-  });
+    document.addEventListener('contextmenu', (event) => {
+      
+      if (event.target !== item) {
+
+        event.preventDefault();
+
+        const currentElement = event.target;
+
+        const isMoveable = activeChar !== currentElement && 
+                          currentElement.classList.contains(`letter`);
+      
+        if (isMoveable) {
+          
+          let nextElement;
   
+          if(currentElement === activeChar.nextElementSibling)  {
+            nextElement = currentElement.nextElementSibling;
+          } else {
+            nextElement = currentElement
+          }
+  
+          ul.insertBefore(activeChar, nextElement);
+          item.classList.remove('active');
+          document.onmousemove = null;
+  
+        } else {
+          item.classList.remove('active');
+          document.onmousemove = null;
+        }
+      }
+    });
+  });
+
+  function setPositionChar(event) {
+
+    item.style.transform = `translate(${(event.clientX - item.offsetLeft) + 7}px,${(event.clientY - item.offsetTop) - 10}px)`;
+  }
+
 };
 
 function displayText(str) {
 
-  output.innerHTML = '';
+  ul.innerHTML = '';
 
   if (str) {
     let arrChars = str.split('');
 
     for (let key of arrChars) {
-      let span = document.createElement('span');
-      span.classList.add('letter');
+      let li = document.createElement('li');
+      li.classList.add('letter');
 
-      span.style.cssText = `
-                              cursor: move; 
-                              font-size: 19px; 
-                              margin-right: 2px;
+
+      li.style.cssText = `  display: inline-block;
+                            cursor: move;
+                            font-size: 19px; 
+                            margin-left: 3px;
                             `;
-      span.innerHTML = key;
-      output.append(span);
+      li.innerHTML = key;
+      ul.append(li);
     }
   } else {
     alert('Enter text');
